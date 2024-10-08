@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chatting</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 20px;
+            overflow: hidden;
+        }
+        .messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ccc;
+            background: white;
+        }
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 70%;
+        }
+        .message.user {
+            background-color: #e1ffc7; /* Light green */
+            align-self: flex-end;
+        }
+        .message.system {
+            background-color: #f1f1f1; /* Light gray */
+        }
+        .input-container {
+            display: flex;
+            padding: 10px;
+            background: #fff;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="messages" id="messages"></div>
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Type your message..." />
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+
+    <script>
+        let username = prompt("Please enter your username:", "User") || "User";
+        const messagesContainer = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Load existing messages from local storage on page load
+        window.onload = () => {
+            const savedMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+            savedMessages.forEach(msg => {
+                addMessage(msg.text, msg.type);
+            });
+        };
+
+        // Function to add a message to the chat with timestamp and store it in local storage
+        function addMessage(text, type) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${type}`;
+        function addMessage(text, type) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${type}`;
+
+            const timestamp = new Date().toLocaleTimeString();
+            const displayName = type === 'user' ? username : 'System';
+    
+            messageElement.innerHTML = `<strong>${displayName}:</strong> ${text} <span style="font-size: 0.8em; color: gray;">(${timestamp})</span>`;
+    
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to the bottom
+
+    // Save message to local storage
+    const chatMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+    chatMessages.push({ text, type });
+    localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+}
+
+            
+            // Create a timestamp
+            const timestamp = new Date().toLocaleTimeString();
+            
+            // Set the message content with the timestamp
+            messageElement.innerHTML = `<strong>${type === 'user' ? 'You' : 'System'}:</strong> ${text} <span style="font-size: 0.8em; color: gray;">(${timestamp})</span>`;
+            
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to the bottom
+
+            // Save message to local storage
+            const chatMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+            chatMessages.push({ text, type });
+            localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+        }
+
+        // Event listener for the send button
+        sendButton.addEventListener('click', () => {          const messageText = messageInput.value.trim();
+            if (messageText) {
+                addMessage(messageText, 'user'); // Add user message
+                messageInput.value = ''; // Clear input field
+                
+                // Simulate a response from the chat system
+                setTimeout(() => {
+                   (`You said: "${messageText}"`, 'system'); // Adding a system response
+                }, 500); // 500ms delay for the system message
+            }
+        });
+
+        // Event listener for pressing "Enter" key
+        messageInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendButton.click(); // Trigger the send button click
+            }
+        });
+    </script>
+
+</body>
+</html>
